@@ -64,12 +64,12 @@ def perform_repair(media_root, verbose=False, force_relink=False, prune=False):
     index = index_files(media_root)
 
     by_tags_dir = os.path.join(media_root, 'by-tag')
-    for tag in os.listdir(by_tags_dir):
+    for tag in sorted(os.listdir(by_tags_dir)):
         tagdir = os.path.join(by_tags_dir, tag)
         if not os.path.isdir(tagdir):
             continue
         print('*** {}'.format(tag))
-        for basename in os.listdir(tagdir):
+        for basename in sorted(os.listdir(tagdir)):
 
             linkname = os.path.join(tagdir, basename)
 
@@ -197,7 +197,7 @@ def rename(media_root, args, verbose=False):
     dest_basename = os.path.basename(dest)
 
     by_tags_dir = os.path.join(media_root, 'by-tag')
-    for tag in os.listdir(by_tags_dir):
+    for tag in sorted(os.listdir(by_tags_dir)):
         old_linkname = os.path.join(by_tags_dir, tag, src_basename)
         if os.path.lexists(old_linkname):
             os.remove(old_linkname)
@@ -225,7 +225,7 @@ def collect(media_root, args, verbose=False):
     dest = os.path.normpath(options.dest)
     mkdir_p(dest)
 
-    for basename in os.listdir(tagdir):
+    for basename in sorted(os.listdir(tagdir)):
         linkname = os.path.join(tagdir, basename)
 
         filename = os.path.join(tagdir, os.readlink(linkname))
