@@ -2,16 +2,16 @@
 =========
 
 _Version 0.1_
-| _Entry_ [@ catseye.tc](https://catseye.tc/node/shelf)
-| _See also:_ [shelf](https://github.com/catseye/shelf)
-∘ [ellsync](https://github.com/catseye/ellsync)
-∘ [yastasoti](https://github.com/catseye/yastasoti)
+| _Entry_ [@ catseye.tc](https://catseye.tc/node/tagfarm)
+| _See also:_ [shelf](https://github.com/catseye/shelf#readme)
+∘ [ellsync](https://github.com/catseye/ellsync#readme)
+∘ [yastasoti](https://github.com/catseye/yastasoti#readme)
 
 - - - -
 
 <img align="right" src="images/tagfarm-logo.png?raw=true" />
 
-**tagfarm** is a lightweight filesystem-based categorization system for media files.
+**tagfarm** is an ultra-lightweight filesystem-based categorization system for arbitrary files.
 
 Motivation
 ----------
@@ -52,11 +52,16 @@ Overview
 ### Media tree
 
 `tagfarm` operates on a part of your filesystem it calls the *media tree*.  There may be
-multiple media trees in your filesystem.  A media tree is identified by having a directory
-called `by-tag` in it.  When `tagfarm` is started, it finds the media tree it will operate
+multiple media trees in your filesystem.  The topmost directory of a media tree is called
+the *media root* and it is identified by having a directory
+called `by-tag` in it.  When `tagfarm` is started, it finds the media root it will operate
 on, by looking for the `by-tag` directory, first in the current directory, then in every
 successive parent directory thereof.  If it reaches `/` without having found a `by-tag`
 directory, it exits immediately with an error code.
+
+One constraint that applies to the media tree is that every file in it should have a
+unique name.  This allows `tagfarm repair` to recreate fix broken tag links when a file is
+moved around inside the media tree.
 
 ### `tag` and `untag`
 
@@ -131,3 +136,5 @@ TODO
 Unit tests.
 
 Better handling of cases where the target being linked is itself a link.
+
+Set-theoretic queries on tags (e.g. tag all files with X or Y and not Z with a new tag T).
