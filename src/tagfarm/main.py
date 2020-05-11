@@ -68,7 +68,7 @@ def perform_repair(media_root, verbose=False, force_relink=False, prune=False):
         tagdir = os.path.join(by_tags_dir, tag)
         if not os.path.isdir(tagdir):
             continue
-        print('*** {}'.format(tag))
+        repairs_made = []
         for basename in os.listdir(tagdir):
 
             linkname = os.path.join(tagdir, basename)
@@ -77,36 +77,41 @@ def perform_repair(media_root, verbose=False, force_relink=False, prune=False):
                 new_basename = basename[8:]
                 new_linkname = os.path.join(tagdir, new_basename)
                 if os.path.lexists(new_linkname):
-                    print("WARNING: not renaming '{}' because '{}' already exists".format(linkname, new_linkname))
+                    repairs_made.append("WARNING: not renaming '{}' because '{}' already exists".format(linkname, new_linkname))
                 else:
-                    print("RENAMING {} -> {}".format(linkname, new_linkname))
+                    repairs_made.append("RENAMING {} -> {}".format(linkname, new_linkname))
                     os.rename(linkname, new_linkname)
                     linkname = new_linkname
 
             if not force_relink:
                 if not os.path.islink(linkname):
-                    print("WARNING: skipping {} (is regular file, but --force-relink not given)".format(linkname))
+                    repairs_made.append("WARNING: skipping {} (is regular file, but --force-relink not given)".format(linkname))
                     continue
                 if not (is_broken_link(linkname) or is_absolute_link(linkname)):
                     if verbose:
-                        print('kept {} -> {}'.format(linkname, os.readlink(linkname)))
+                        repairs_made.append('kept {} -> {}'.format(linkname, os.readlink(linkname)))
                     continue
 
             candidates = index.get(basename, set())
             if len(candidates) == 0:
                 if prune:
-                    print("NOTICE: no candidates for {}, DELETING".format(basename))
+                    repairs_made.append("NOTICE: no candidates for {}, DELETING".format(basename))
                     os.remove(linkname)
                 else:
-                    print("WARNING: no candidates for {}".format(basename))
+                    repairs_made.append("WARNING: no candidates for {}".format(basename))
             elif len(candidates) > 1:
-                print("WARNING: multiple candidates for {}:  {}".format(basename, candidates))
+                repairs_made.append("WARNING: multiple candidates for {}:  {}".format(basename, candidates))
             else:
                 os.remove(linkname)
                 filename = list(candidates)[0]
                 srcname = os.path.join('..', '..', os.path.relpath(filename, media_root))
                 os.symlink(srcname, linkname)
-                print('FIXED {} -> {}'.format(linkname, srcname))
+                repairs_made.append('FIXED {} -> {}'.format(linkname, srcname))
+
+        if repairs_made:
+            print('*** {}'.format(tag))
+            for repair_made in repairs_made:
+                print(repair_made)
 
 
 # - - - - commands - - - -
