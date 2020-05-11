@@ -44,6 +44,39 @@ class TestTagfarm(unittest.TestCase):
         with self.assertRaises(SystemExit):
             main(['backup.json'])
 
+    def test_tag(self):
+        check_call("touch content1", shell=True)
+        check_call("touch content2", shell=True)
+        main(['tag', 'blixit', 'content1', 'content2'])
+        main(['tag', 'flonk', 'content1'])
+
+        self.assertEqual(os.readlink(os.path.join('by-tag', 'blixit', 'content1')), '../../content1')
+        self.assertEqual(os.readlink(os.path.join('by-tag', 'blixit', 'content2')), '../../content2')
+
+        self.assertEqual(os.readlink(os.path.join('by-tag', 'flonk', 'content1')), '../../content1')
+        self.assertFalse(os.path.exists(os.path.join('by-tag', 'flonk', 'content2')))
+        self.assertFalse(os.path.lexists(os.path.join('by-tag', 'flonk', 'content2')))
+
+    def test_untag(self):
+        check_call("touch content1", shell=True)
+        check_call("touch content2", shell=True)
+        main(['tag', 'blixit', 'content1', 'content2'])
+        main(['tag', 'flonk', 'content1'])
+
+        main(['untag', 'blixit', 'content1', 'content2'])
+        main(['untag', 'flonk', 'content2'])
+
+        self.assertFalse(os.path.exists(os.path.join('by-tag', 'blixit', 'content1')))
+        self.assertFalse(os.path.lexists(os.path.join('by-tag', 'blixit', 'content1')))
+
+        self.assertFalse(os.path.exists(os.path.join('by-tag', 'blixit', 'content2')))
+        self.assertFalse(os.path.lexists(os.path.join('by-tag', 'blixit', 'content2')))
+
+        self.assertEqual(os.readlink(os.path.join('by-tag', 'flonk', 'content1')), '../../content1')
+
+        self.assertFalse(os.path.exists(os.path.join('by-tag', 'flonk', 'content2')))
+        self.assertFalse(os.path.lexists(os.path.join('by-tag', 'flonk', 'content2')))
+
 
 if __name__ == '__main__':
     unittest.main()
