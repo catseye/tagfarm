@@ -77,6 +77,26 @@ class TestTagfarm(unittest.TestCase):
         self.assertFalse(os.path.exists(os.path.join('by-tag', 'flonk', 'content2')))
         self.assertFalse(os.path.lexists(os.path.join('by-tag', 'flonk', 'content2')))
 
+    def test_repair(self):
+        check_call("mkdir -p subdir1", shell=True)
+        check_call("mkdir -p subdir2", shell=True)
+        check_call("touch subdir1/content1", shell=True)
+
+        main(['tag', 'blixit', 'subdir1/content1'])
+
+        self.assertEqual(os.readlink(os.path.join('by-tag', 'blixit', 'content1')), '../../subdir1/content1')
+
+        check_call("mv subdir1/content1 subdir2/content1", shell=True)
+
+        self.assertFalse(os.path.exists(os.path.join('by-tag', 'blixit', 'content1')))
+        self.assertTrue(os.path.lexists(os.path.join('by-tag', 'blixit', 'content1')))
+
+        self.assertEqual(os.readlink(os.path.join('by-tag', 'blixit', 'content1')), '../../subdir1/content1')
+
+        main(['repair'])
+
+        self.assertEqual(os.readlink(os.path.join('by-tag', 'blixit', 'content1')), '../../subdir2/content1')
+
 
 if __name__ == '__main__':
     unittest.main()
