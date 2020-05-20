@@ -52,6 +52,10 @@ def is_absolute_link(path):
     return os.path.lexists(path) and os.readlink(path).startswith('/')
 
 
+def readlink_or_broken(path):
+    return '*BROKEN*' if is_broken_link(path) else os.readlink(path)
+
+
 def relativize_target(media_root, path):
     # Prepends `../..` because the link always resides in `by-tag/<tagname>`
     return os.path.join('..', '..', os.path.relpath(path, media_root))
@@ -82,7 +86,11 @@ def perform_repair(media_root, verbose=False, force_relink=False, prune=False):
                 new_basename = basename[8:]
                 new_linkname = os.path.join(tagdir, new_basename)
                 if os.path.lexists(new_linkname):
-                    repairs_made.append("WARNING: not renaming '{}' because '{}' already exists".format(linkname, new_linkname))
+                    repairs_made.append(
+                        "WARNING: not renaming '{}' (-> '{}') because '{}' (-> '{}') already exists".format(
+                            linkname, readlink_or_broken(linkname), new_linkname, readlink_or_broken(new_linkname)
+                        )
+                    )
                 else:
                     repairs_made.append("RENAMING {} -> {}".format(linkname, new_linkname))
                     os.rename(linkname, new_linkname)
