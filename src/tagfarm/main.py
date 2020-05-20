@@ -52,11 +52,16 @@ def is_absolute_link(path):
     return os.path.lexists(path) and os.readlink(path).startswith('/')
 
 
+def relativize_target(media_root, path):
+    # Prepends `../..` because the link always resides in `by-tag/<tagname>`
+    return os.path.join('..', '..', os.path.relpath(path, media_root))
+
+
 def tag_file(media_root, filename, tag):
     mkdir_p(os.path.join(media_root, 'by-tag', tag))
     linkname = os.path.join(media_root, 'by-tag', tag, os.path.basename(filename))
     if not os.path.lexists(linkname):
-        srcname = os.path.join('..', '..', os.path.relpath(filename, media_root))
+        srcname = relativize_target(media_root, filename)
         os.symlink(srcname, linkname)
 
 
@@ -104,7 +109,7 @@ def perform_repair(media_root, verbose=False, force_relink=False, prune=False):
             else:
                 os.remove(linkname)
                 filename = list(candidates)[0]
-                srcname = os.path.join('..', '..', os.path.relpath(filename, media_root))
+                srcname = relativize_target(media_root, filename)
                 os.symlink(srcname, linkname)
                 repairs_made.append('FIXED {} -> {}'.format(linkname, srcname))
 
