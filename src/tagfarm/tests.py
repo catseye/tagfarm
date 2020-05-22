@@ -1,4 +1,3 @@
-import json
 import os
 import sys
 from tempfile import mkdtemp
