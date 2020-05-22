@@ -34,14 +34,15 @@ class TestTagfarm(unittest.TestCase):
         sys.stderr = self.saved_stderr
         super(TestTagfarm, self).tearDown()
 
+    def test_unknown_subcommand(self):
+        with self.assertRaises(SystemExit):
+            main(['yarfify'])
+
     def test_media_root_not_found(self):
         check_call("rm -rf by-tag", shell=True)
+        check_call("touch content1", shell=True)
         with self.assertRaises(ValueError):
-            main(['backup.json'])
-
-    def test_failure(self):
-        with self.assertRaises(SystemExit):
-            main(['backup.json'])
+            main(['tag', 'blixit', 'content1'])
 
     def test_tag(self):
         check_call("touch content1", shell=True)
