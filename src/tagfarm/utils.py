@@ -67,12 +67,12 @@ def perform_repair(media_root, verbose=False, force_relink=False, prune=False):
     index = index_files(media_root)
 
     by_tags_dir = os.path.join(media_root, 'by-tag')
-    for tag in os.listdir(by_tags_dir):
+    for tag in sorted(os.listdir(by_tags_dir)):
         tagdir = os.path.join(by_tags_dir, tag)
         if not os.path.isdir(tagdir):
             continue
         repairs_made = []
-        for basename in os.listdir(tagdir):
+        for basename in sorted(os.listdir(tagdir)):
 
             linkname = os.path.join(tagdir, basename)
 
