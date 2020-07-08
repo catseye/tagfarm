@@ -1,7 +1,7 @@
 `tagfarm`
 =========
 
-_Version 0.1_
+_Version 0.2_
 | _Entry_ [@ catseye.tc](https://catseye.tc/node/tagfarm)
 | _See also:_ [shelf](https://github.com/catseye/shelf#readme)
 ∘ [ellsync](https://github.com/catseye/ellsync#readme)
@@ -132,8 +132,6 @@ the tag links.  For example:
 
 TODO
 ----
-
-Unit tests.
 
 Better handling of cases where the target being linked is itself a link.
 
