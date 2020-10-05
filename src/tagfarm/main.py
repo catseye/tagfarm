@@ -99,6 +99,7 @@ def main(args):
     parser.add_argument('--verbose', action='store_true',
         help='Produce more reporting output'
     )
+    parser.add_argument('--version', action='version', version="%(prog)s 0.3")
 
     subparsers = parser.add_subparsers()
 
