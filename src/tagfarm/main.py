@@ -35,7 +35,13 @@ def showtags(media_root, options):
 
 
 def repair(media_root, options):
-    perform_repair(media_root, verbose=options.verbose, force_relink=options.force_relink, prune=options.prune)
+    perform_repair(
+        media_root,
+        verbose=options.verbose,
+        force_relink=options.force_relink,
+        restrict_to_tag=options.restrict_to_tag,
+        prune=options.prune
+    )
 
 
 def rename(media_root, options):
@@ -93,6 +99,7 @@ def main(args):
     parser.add_argument('--verbose', action='store_true',
         help='Produce more reporting output'
     )
+    parser.add_argument('--version', action='version', version="%(prog)s 0.3")
 
     subparsers = parser.add_subparsers()
 
@@ -133,6 +140,9 @@ def main(args):
     )
     parser_repair.add_argument('--prune', action='store_true',
         help='Remove broken symlinks for which no candidate files can be found'
+    )
+    parser_repair.add_argument('--restrict-to-tag', metavar='TAG', type=str, default=None,
+        help='Only attempt to repair taglinks with this tag'
     )
     parser_repair.set_defaults(func=repair)
 

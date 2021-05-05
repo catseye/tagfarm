@@ -63,17 +63,17 @@ def tag_file(media_root, filename, tag):
         os.symlink(srcname, linkname)
 
 
-def perform_repair(media_root, verbose=False, force_relink=False, prune=False):
+def perform_repair(media_root, verbose=False, force_relink=False, restrict_to_tag=None, prune=False):
     index = index_files(media_root)
 
     by_tags_dir = os.path.join(media_root, 'by-tag')
-    for tag in sorted(os.listdir(by_tags_dir)):
+    tags = [restrict_to_tag] if restrict_to_tag else sorted(os.listdir(by_tags_dir))
+    for tag in tags:
         tagdir = os.path.join(by_tags_dir, tag)
         if not os.path.isdir(tagdir):
             continue
         repairs_made = []
         for basename in sorted(os.listdir(tagdir)):
-
             linkname = os.path.join(tagdir, basename)
 
             if basename.startswith('Link to '):

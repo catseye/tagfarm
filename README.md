@@ -1,7 +1,7 @@
 `tagfarm`
 =========
 
-_Version 0.2_
+_Version 0.3_
 | _Entry_ [@ catseye.tc](https://catseye.tc/node/tagfarm)
 | _See also:_ [shelf](https://github.com/catseye/shelf#readme)
 ∘ [ellsync](https://github.com/catseye/ellsync#readme)
@@ -93,7 +93,8 @@ By default, tagfarm will only attempt to repair broken links if they are actuall
 symlinks (not, for example, regular files) and not broken.  To have it replace all files
 it happens to find in the tag link directory, pass `--force-relink`.  This is occasionally
 handy for converting a directory full of copies of elsewhere-existing media files,
-into links.
+into links.  In conjunction with this, `--restrict-to-tag` may be used to name a single tag,
+and this operation will be applied only to that tag.
 
 `tagfarm repair` will also replace any links it finds that have absolute target paths,
 with ones with relative target paths, even when the link is not broken.
