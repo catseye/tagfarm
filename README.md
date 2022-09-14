@@ -43,8 +43,8 @@ the same would hold for a set of 10,000 files that are tagged with the same tag.
 Quick start
 -----------
 
-Make sure you have Python installed, clone this repository, and put its `bin` directory on
-your executable search path.  You can then run `tagfarm` from your terminal.
+Make sure you have Python (2.7 or 3.x) installed, clone this repository, and put its `bin`
+directory on your executable search path.  You can then run `tagfarm` from your terminal.
 
 Overview
 --------
